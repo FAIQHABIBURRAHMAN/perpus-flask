@@ -1,0 +1,88 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>Data Buku</h1>
+        <p>Kelola data buku perpustakaan.</p>
+    </div>
+
+    <a class="btn btn-primary"
+       href="{{ url_for('buku.tambah') }}">
+       + Tambah Buku
+    </a>
+</div>
+
+<form method="GET" class="search-box">
+    <input type="text" name="keyword"
+           placeholder="Cari judul atau pengarang..."
+           value="{{ keyword }}">
+
+    <button class="btn btn-secondary" type="submit">
+        Cari
+    </button>
+
+    <a class="btn btn-light"
+       href="{{ url_for('buku.index') }}">
+       Reset
+    </a>
+</form>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID Buku</th>
+                <th>Judul</th>
+                <th>Pengarang</th>
+                <th>Penerbit</th>
+                <th>Tahun</th>
+                <th>Stok</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in buku %}
+            <tr>
+                <td>{{ item.id_buku }}</td>
+                <td>{{ item.judul }}</td>
+                <td>{{ item.pengarang }}</td>
+                <td>{{ item.penerbit or '-' }}</td>
+                <td>{{ item.tahun_terbit or '-' }}</td>
+                <td>{{ item.stok }}</td>
+
+                <td class="actions">
+                    <a class="btn btn-warning"
+                       href="{{ url_for('buku.edit',
+                       id_buku=item.id_buku) }}">
+                       Edit
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('buku.hapus',
+                          id_buku=item.id_buku) }}"
+                          onsubmit="return confirm('Hapus buku ini?')">
+
+                        <button class="btn btn-danger"
+                                type="submit">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+
+            {% else %}
+            <tr>
+                <td colspan="7" class="empty">
+                    Belum ada data buku.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
